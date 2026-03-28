@@ -1,0 +1,246 @@
+{
+  "tasks": [
+    {
+      "id": "03673720-63fe-4808-982c-0723fb4cc99a",
+      "title": "Hey world",
+      "type": "To-do",
+      "priority": "Medium",
+      "dueDate": "2026-03-17",
+      "dueTime": "08:00",
+      "notes": "",
+      "status": "complete",
+      "contact": {
+        "name": "Unassigned",
+        "avatarInitials": "NA",
+        "avatarColor": "#CBD5E1"
+      },
+      "createdAt": "2026-03-28T13:49:11.543Z"
+    },
+    {
+      "id": "01074211-2a3b-4887-9439-482d5f37aeb8",
+      "title": "Analyze for Mark",
+      "type": "To-do",
+      "priority": "Medium",
+      "dueDate": "2026-03-31",
+      "dueTime": "08:00",
+      "notes": "",
+      "status": "complete",
+      "contact": {
+        "name": "Unassigned",
+        "avatarInitials": "NA",
+        "avatarColor": "#CBD5E1"
+      },
+      "createdAt": "2026-03-28T12:30:40.136Z"
+    },
+    {
+      "id": "9a84688e-2e57-4aa8-a0a1-4ce8d2ee2110",
+      "title": "Call Charlotte Arrowood",
+      "type": "Call",
+      "priority": "High",
+      "dueDate": "2026-03-28",
+      "dueTime": "08:00",
+      "status": "complete",
+      "notes": "Review contract questions before the call.",
+      "contact": {
+        "name": "Charlotte Arrowood",
+        "avatarInitials": "CA",
+        "avatarColor": "#E57373"
+      },
+      "createdAt": "2026-03-18T09:15:00Z"
+    },
+    {
+      "id": "2fef4134-ab72-4862-ac08-c9482a487065",
+      "title": "Send onboarding email to Mason Park",
+      "type": "Email",
+      "priority": "Medium",
+      "dueDate": "2026-03-29",
+      "dueTime": "11:00",
+      "status": "complete",
+      "notes": "Include onboarding checklist and support links.",
+      "contact": {
+        "name": "Mason Park",
+        "avatarInitials": "MP",
+        "avatarColor": "#4DB6AC"
+      },
+      "createdAt": "2026-03-20T10:20:00Z"
+    },
+    {
+      "id": "53f0f6e0-9e9f-4f8d-a647-50e5f3e8de7b",
+      "title": "Prepare contract follow-up for Olivia Chen",
+      "type": "To-do",
+      "priority": "High",
+      "dueDate": "2026-03-26",
+      "dueTime": "15:30",
+      "status": "complete",
+      "notes": "Confirm legal approved final redlines.",
+      "contact": {
+        "name": "Olivia Chen",
+        "avatarInitials": "OC",
+        "avatarColor": "#64B5F6"
+      },
+      "createdAt": "2026-03-19T08:45:00Z"
+    },
+    {
+      "id": "4d910f96-773f-4e15-99fd-3eaf54dfd71e",
+      "title": "Check in on Rafael Gomez campaign",
+      "type": "Call",
+      "priority": "Low",
+      "dueDate": "2026-03-31",
+      "dueTime": "14:00",
+      "status": "complete",
+      "notes": "Ask for feedback on first week performance.",
+      "contact": {
+        "name": "Rafael Gomez",
+        "avatarInitials": "RG",
+        "avatarColor": "#FFB74D"
+      },
+      "createdAt": "2026-03-21T13:05:00Z"
+    },
+    {
+      "id": "a1f42e70-9f84-4fd4-b7d3-c4bcdf49279b",
+      "title": "Share pricing sheet with Priya Nair",
+      "type": "Email",
+      "priority": "Medium",
+      "dueDate": "2026-03-28",
+      "dueTime": "09:00",
+      "status": "complete",
+      "notes": "Pricing sheet sent with annual discount option.",
+      "contact": {
+        "name": "Priya Nair",
+        "avatarInitials": "PN",
+        "avatarColor": "#BA68C8"
+      },
+      "createdAt": "2026-03-17T07:55:00Z"
+    },
+    {
+      "id": "fdcda3d7-ec22-40a0-a4e0-50935ecdeec3",
+      "title": "Review Q2 prospect list",
+      "type": "To-do",
+      "priority": "Low",
+      "dueDate": "2026-04-02",
+      "dueTime": "16:00",
+      "status": "complete",
+      "notes": "Tag accounts for the outbound sequence.",
+      "contact": {
+        "name": "Ethan Brooks",
+        "avatarInitials": "EB",
+        "avatarColor": "#81C784"
+      },
+      "createdAt": "2026-03-22T12:40:00Z"
+    },
+    {
+      "id": "e13c59be-2ea8-4fd6-a35d-2f6af5d4cb3a",
+      "title": "Schedule demo with Ethan Brooks",
+      "type": "Call",
+      "priority": "High",
+      "dueDate": "2026-03-27",
+      "dueTime": "10:30",
+      "status": "complete",
+      "notes": "Coordinate with product specialist.",
+      "contact": {
+        "name": "Ethan Brooks",
+        "avatarInitials": "EB",
+        "avatarColor": "#81C784"
+      },
+      "createdAt": "2026-03-20T15:10:00Z"
+    },
+    {
+      "id": "16f4990a-1f16-474d-b0ff-b4f954c21495",
+      "title": "Send renewal reminder to Sofia Patel",
+      "type": "Email",
+      "priority": null,
+      "dueDate": "2026-04-05",
+      "dueTime": "13:00",
+      "status": "complete",
+      "notes": "Mention loyalty pricing and renewal timeline.",
+      "contact": {
+        "name": "Sofia Patel",
+        "avatarInitials": "SP",
+        "avatarColor": "#90A4AE"
+      },
+      "createdAt": "2026-03-23T08:15:00Z"
+    },
+    {
+      "id": "28ff3539-cdd4-430f-9472-7615f6768d80",
+      "title": "Draft follow-up notes for Jonah Lee",
+      "type": "To-do",
+      "priority": "Medium",
+      "dueDate": "2026-03-30",
+      "dueTime": "17:00",
+      "status": "complete",
+      "notes": "Capture objections from discovery call.",
+      "contact": {
+        "name": "Jonah Lee",
+        "avatarInitials": "JL",
+        "avatarColor": "#F06292"
+      },
+      "createdAt": "2026-03-25T16:45:00Z"
+    },
+    {
+      "id": "52cdd126-fdac-4b6c-a561-586b5338f33a",
+      "title": "Call webinar lead about trial setup",
+      "type": "Call",
+      "priority": "High",
+      "dueDate": "2026-03-28",
+      "dueTime": "12:30",
+      "status": "complete",
+      "notes": "Lead requested technical walkthrough.",
+      "contact": {
+        "name": "Mason Park",
+        "avatarInitials": "MP",
+        "avatarColor": "#4DB6AC"
+      },
+      "createdAt": "2026-03-26T11:05:00Z"
+    }
+  ],
+  "contacts": [
+    {
+      "id": "dceffabc-6f33-48dd-8662-d806ecf08f38",
+      "name": "Charlotte Arrowood",
+      "avatarInitials": "CA",
+      "avatarColor": "#E57373"
+    },
+    {
+      "id": "7f62f8ba-bf3d-4f05-a4e7-ea1270fa6ec2",
+      "name": "Mason Park",
+      "avatarInitials": "MP",
+      "avatarColor": "#4DB6AC"
+    },
+    {
+      "id": "7b5b14f3-88c6-41e2-8de1-06ff8f281fd7",
+      "name": "Olivia Chen",
+      "avatarInitials": "OC",
+      "avatarColor": "#64B5F6"
+    },
+    {
+      "id": "ec6f61d6-fbbf-4c18-b57b-f12fcb9b1613",
+      "name": "Rafael Gomez",
+      "avatarInitials": "RG",
+      "avatarColor": "#FFB74D"
+    },
+    {
+      "id": "91f80a41-76fd-4f14-91a0-c95b4b50d80d",
+      "name": "Priya Nair",
+      "avatarInitials": "PN",
+      "avatarColor": "#BA68C8"
+    },
+    {
+      "id": "5e57de4d-88d6-4f51-9e2f-b79d59855f86",
+      "name": "Ethan Brooks",
+      "avatarInitials": "EB",
+      "avatarColor": "#81C784"
+    },
+    {
+      "id": "3c10f6e2-eb56-4870-a868-f1fc385e4f7e",
+      "name": "Sofia Patel",
+      "avatarInitials": "SP",
+      "avatarColor": "#90A4AE"
+    },
+    {
+      "id": "6ef75e6d-c45c-49ab-88f8-e2ef2cb9f468",
+      "name": "Jonah Lee",
+      "avatarInitials": "JL",
+      "avatarColor": "#F06292"
+    }
+  ]
+}
