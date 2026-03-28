@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   CheckIcon,
   ChevronDownIcon,
@@ -15,8 +15,14 @@ import { v4 as uuidv4 } from 'uuid';
 import Sidebar from './components/Sidebar';
 import ContactsPanel from './components/ContactsPanel';
 import TaskPanel from './components/TaskPanel';
-
-const API_BASE = 'http://localhost:3005/api';
+import {
+  CONTACTS_STORAGE_KEY,
+  TASKS_STORAGE_KEY,
+  consumeStorageNotice,
+  loadAll,
+  saveContacts,
+  saveTasks,
+} from './data/localStore';
 
 const tabOptions = [
   { key: 'all', label: 'All' },
@@ -141,37 +147,57 @@ export default function App() {
   const today = formatLocalDate(new Date());
   const weekEnd = endOfWeek(new Date());
 
-  const loadData = async () => {
+  const loadData = useCallback(async ({ showLoading = true } = {}) => {
     try {
-      setLoading(true);
-      setError('');
-
-      const [tasksResponse, contactsResponse] = await Promise.all([
-        fetch(`${API_BASE}/tasks`),
-        fetch(`${API_BASE}/contacts`),
-      ]);
-
-      if (!tasksResponse.ok || !contactsResponse.ok) {
-        throw new Error('Could not load tasks and contacts.');
+      if (showLoading) {
+        setLoading(true);
       }
 
-      const [taskData, contactData] = await Promise.all([
-        tasksResponse.json(),
-        contactsResponse.json(),
-      ]);
+      const { tasks: taskData, contacts: contactData } = await loadAll();
 
       setTasks(Array.isArray(taskData) ? taskData : []);
       setContacts(Array.isArray(contactData) ? contactData : []);
+      setError(consumeStorageNotice() || '');
     } catch (loadError) {
-      setError(loadError.message);
+      setError(loadError.message || 'Could not load local data. Check browser storage settings.');
     } finally {
-      setLoading(false);
+      if (showLoading) {
+        setLoading(false);
+      }
     }
-  };
+  }, []);
 
   useEffect(() => {
-    loadData();
-  }, []);
+    void loadData();
+  }, [loadData]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return undefined;
+    }
+
+    const handleStorageSync = (event) => {
+      if (event.storageArea !== window.localStorage) {
+        return;
+      }
+
+      if (
+        event.key !== null &&
+        event.key !== TASKS_STORAGE_KEY &&
+        event.key !== CONTACTS_STORAGE_KEY
+      ) {
+        return;
+      }
+
+      void loadData({ showLoading: false });
+    };
+
+    window.addEventListener('storage', handleStorageSync);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageSync);
+    };
+  }, [loadData]);
 
   useEffect(() => {
     setSelectedTaskIds((currentSelected) => {
@@ -183,21 +209,12 @@ export default function App() {
     setTasks(nextTasks);
 
     try {
-      const response = await fetch(`${API_BASE}/tasks`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(nextTasks),
-      });
-
-      if (!response.ok) {
-        throw new Error('Could not save tasks.');
-      }
-
-      setError('');
+      await saveTasks(nextTasks);
+      setError(consumeStorageNotice() || '');
     } catch (saveError) {
-      setError(saveError.message);
+      setError(
+        saveError.message || 'Could not save tasks locally. Check browser storage settings.'
+      );
     }
   };
 
@@ -205,22 +222,13 @@ export default function App() {
     setContacts(nextContacts);
 
     try {
-      const response = await fetch(`${API_BASE}/contacts`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(nextContacts),
-      });
-
-      if (!response.ok) {
-        throw new Error('Could not save contacts.');
-      }
-
-      setError('');
+      await saveContacts(nextContacts);
+      setError(consumeStorageNotice() || '');
       return true;
     } catch (saveError) {
-      setError(saveError.message);
+      setError(
+        saveError.message || 'Could not save contacts locally. Check browser storage settings.'
+      );
       return false;
     }
   };

@@ -1,25 +1,23 @@
 # Flo
 
 Flo is a local-first task manager inspired by HubSpot Tasks.  
-It uses a React + Vite frontend with an Express backend that reads/writes a local `db.json` file.
+It uses a React + Vite frontend and stores data in browser `localStorage`.
 
 ## Features
 
 - HubSpot-style task table UI (filters, tabs, search, sortable columns)
 - Left sidebar with live task counts (`Open`, `Due today`, `Due this week`, `High priority`)
 - Slide-in panel for creating and editing tasks
-- Contacts support with local contacts API and contact association on tasks
+- Contacts support with contact association on tasks
 - Bulk task actions (check/uncheck/delete selected)
-- Persistent storage in local `db.json` (no external DB required)
+- Persistent local browser storage (no external DB required)
 
 ## Tech Stack
 
 - React + Vite
 - Tailwind CSS + DaisyUI
-- Express + CORS
 - Heroicons
 - UUID
-- Concurrently
 
 ## Getting Started
 
@@ -39,21 +37,22 @@ npm install
 npm run dev
 ```
 
-This starts:
-
-- Express API at `http://localhost:3005`
-- Vite frontend at `http://localhost:5173`
+This starts the Vite frontend at `http://localhost:5173`.
 
 ## Scripts
 
-- `bun run dev` / `npm run dev` - run backend and frontend concurrently
-- `bun run server` / `npm run server` - run only Express API
+- `bun run dev` / `npm run dev` - run frontend only
+- `bun run dev:legacy` / `npm run dev:legacy` - run legacy Express API + frontend
+- `bun run server` / `npm run server` - run only legacy Express API
 - `bun run build` / `npm run build` - production frontend build
 - `bun run preview` / `npm run preview` - preview production build
 
 ## Data Storage
 
-All data is stored in the root-level `db.json`.
+All app data is stored in browser `localStorage` with these keys:
+
+- `flo.tasks.v1`
+- `flo.contacts.v1`
 
 Expected top-level shape:
 
@@ -96,33 +95,27 @@ Expected top-level shape:
 }
 ```
 
-## API
-
-Base URL: `http://localhost:3005/api`
-
-- `GET /tasks` - returns all tasks
-- `POST /tasks` - replaces all tasks (request body must be an array)
-- `GET /contacts` - returns all contacts
-- `POST /contacts` - replaces all contacts (request body must be an array)
-
 ## Project Structure
 
 ```text
 flo/
-  server/
-    index.js
   src/
+    data/
+      localStore.js
     App.jsx
     components/
       Sidebar.jsx
       TaskPanel.jsx
       ContactsPanel.jsx
       DatePicker.jsx
+  server/
+    index.js
   db.json
   requirements.md
 ```
 
 ## Notes
 
-- This project is intentionally local-first: every create/edit/delete writes back to `db.json`.
-- If you want to reseed demo data, update `db.json` and restart the server.
+- This project is intentionally local-first: every create/edit/delete writes to browser `localStorage`.
+- Data is scoped to each browser profile/device and is not synced across users/devices.
+- `server/index.js` and `db.json` are kept as legacy artifacts and are not required for deployment.
