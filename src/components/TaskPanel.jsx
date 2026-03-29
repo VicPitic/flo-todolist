@@ -17,7 +17,7 @@ const priorityOptions = [
 
 const emptyForm = {
   title: '',
-  type: 'Call',
+  type: 'To-do',
   priority: 'Medium',
   contactId: '',
   dueDate: '',
@@ -110,7 +110,7 @@ export default function TaskPanel({
 
       setForm({
         title: task.title ?? '',
-        type: task.type ?? 'Call',
+        type: task.type ?? 'To-do',
         priority: priorityValue,
         contactId: matchedContact?.id ?? '',
         dueDate: task.dueDate ?? '',

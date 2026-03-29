@@ -1,11 +1,19 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   CalendarDaysIcon,
+  ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
 } from '@heroicons/react/24/outline';
 
 const WEEKDAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+const DATE_OPTIONS = {
+  today: 'Today',
+  tomorrow: 'Tomorrow',
+  workingDays3: 'In 3 working days',
+  custom: 'Custom Date',
+};
 
 function parseDateString(dateString) {
   if (!dateString) {
@@ -66,13 +74,75 @@ function isSameDay(firstDate, secondDate) {
   );
 }
 
+function startOfDay(date) {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
+function addDays(date, days) {
+  const nextDate = new Date(date);
+  nextDate.setDate(nextDate.getDate() + days);
+  return nextDate;
+}
+
+function isWeekend(date) {
+  const day = date.getDay();
+  return day === 0 || day === 6;
+}
+
+function addWorkingDays(date, days) {
+  const nextDate = new Date(date);
+  let remainingDays = days;
+
+  while (remainingDays > 0) {
+    nextDate.setDate(nextDate.getDate() + 1);
+
+    if (!isWeekend(nextDate)) {
+      remainingDays -= 1;
+    }
+  }
+
+  return nextDate;
+}
+
+function inferOptionFromValue(dateValue, presetDates) {
+  if (!dateValue) {
+    return '';
+  }
+
+  if (dateValue === presetDates.today) {
+    return 'today';
+  }
+
+  if (dateValue === presetDates.tomorrow) {
+    return 'tomorrow';
+  }
+
+  if (dateValue === presetDates.workingDays3) {
+    return 'workingDays3';
+  }
+
+  return 'custom';
+}
+
 export default function DatePicker({ id, value, onChange, placeholder = 'Select a date' }) {
   const wrapperRef = useRef(null);
   const selectedDate = useMemo(() => parseDateString(value), [value]);
   const [isOpen, setIsOpen] = useState(false);
+  const [pendingCustomSelection, setPendingCustomSelection] = useState(false);
   const [visibleMonth, setVisibleMonth] = useState(() => {
     return startOfMonth(selectedDate ?? new Date());
   });
+
+  const baseDate = startOfDay(new Date());
+  const presetDates = {
+    today: formatDateValue(baseDate),
+    tomorrow: formatDateValue(addDays(baseDate, 1)),
+    workingDays3: formatDateValue(addWorkingDays(baseDate, 3)),
+  };
+
+  const selectedOptionFromValue = inferOptionFromValue(value, presetDates);
+
+  const selectedOption = pendingCustomSelection ? 'custom' : selectedOptionFromValue;
 
   const calendarDays = useMemo(() => buildCalendarDays(visibleMonth), [visibleMonth]);
   const monthLabel = useMemo(() => {
@@ -83,8 +153,7 @@ export default function DatePicker({ id, value, onChange, placeholder = 'Select 
   }, [visibleMonth]);
 
   const today = useMemo(() => {
-    const now = new Date();
-    return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    return startOfDay(new Date());
   }, []);
 
   useEffect(() => {
@@ -117,6 +186,12 @@ export default function DatePicker({ id, value, onChange, placeholder = 'Select 
     setVisibleMonth(startOfMonth(selectedDate ?? new Date()));
   }, [selectedDate, isOpen]);
 
+  useEffect(() => {
+    if (value || !isOpen) {
+      setPendingCustomSelection(false);
+    }
+  }, [value, isOpen]);
+
   const displayLabel = selectedDate
     ? selectedDate.toLocaleDateString(undefined, {
         weekday: 'short',
@@ -128,35 +203,67 @@ export default function DatePicker({ id, value, onChange, placeholder = 'Select 
 
   const selectDate = (date) => {
     onChange(formatDateValue(date));
+    setPendingCustomSelection(false);
     setIsOpen(false);
   };
 
-  const selectOffsetDate = (offset) => {
-    const nextDate = new Date();
-    nextDate.setHours(0, 0, 0, 0);
-    nextDate.setDate(nextDate.getDate() + offset);
-    selectDate(nextDate);
+  const handlePresetChange = (nextOption) => {
+    if (nextOption === 'custom') {
+      onChange('');
+      setPendingCustomSelection(true);
+      setIsOpen(true);
+      setVisibleMonth(startOfMonth(selectedDate ?? new Date()));
+      return;
+    }
+
+    if (nextOption === 'today' || nextOption === 'tomorrow' || nextOption === 'workingDays3') {
+      onChange(presetDates[nextOption]);
+    }
+
+    setPendingCustomSelection(false);
+    setIsOpen(false);
   };
 
   return (
     <div ref={wrapperRef} className="relative">
-      <button
-        id={id}
-        type="button"
-        aria-haspopup="dialog"
-        aria-expanded={isOpen}
-        onClick={() => setIsOpen((open) => !open)}
-        className={`flex h-10 w-full items-center justify-between rounded-lg border px-3 text-left text-sm transition ${
-          selectedDate
-            ? 'border-hubspot-border text-[#33475B]'
-            : 'border-hubspot-border text-[#7A8CA2]'
-        } ${isOpen ? 'border-hubspot-teal ring-2 ring-hubspot-teal/15' : 'hover:border-[#B7C5D6]'}`}
-      >
-        <span>{displayLabel}</span>
-        <CalendarDaysIcon className="h-4 w-4 text-[#5B708B]" />
-      </button>
+      <div className="relative">
+        <select
+          id={id}
+          value={selectedOption || ''}
+          onChange={(event) => handlePresetChange(event.target.value)}
+          className="h-10 w-full appearance-none rounded-lg border border-hubspot-border bg-white px-3 pr-9 text-sm text-[#33475B] transition hover:border-[#B7C5D6] focus:border-hubspot-teal focus:outline-none focus:ring-2 focus:ring-hubspot-teal/15"
+        >
+          <option value="" disabled>
+            {placeholder}
+          </option>
+          <option value="today">{DATE_OPTIONS.today}</option>
+          <option value="tomorrow">{DATE_OPTIONS.tomorrow}</option>
+          <option value="workingDays3">{DATE_OPTIONS.workingDays3}</option>
+          <option value="custom">{DATE_OPTIONS.custom}</option>
+        </select>
 
-      {isOpen ? (
+        <ChevronDownIcon
+          className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#5B708B]"
+          aria-hidden="true"
+        />
+      </div>
+
+      {selectedOption === 'custom' ? (
+        <button
+          type="button"
+          aria-haspopup="dialog"
+          aria-expanded={isOpen}
+          onClick={() => setIsOpen((open) => !open)}
+          className={`mt-2 flex h-10 w-full items-center justify-between rounded-lg border px-3 text-left text-sm transition ${
+            selectedDate ? 'border-hubspot-border text-[#33475B]' : 'border-hubspot-border text-[#7A8CA2]'
+          } ${isOpen ? 'border-hubspot-teal ring-2 ring-hubspot-teal/15' : 'hover:border-[#B7C5D6]'}`}
+        >
+          <span>{displayLabel}</span>
+          <CalendarDaysIcon className="h-4 w-4 text-[#5B708B]" />
+        </button>
+      ) : null}
+
+      {selectedOption === 'custom' && isOpen ? (
         <div className="absolute z-30 mt-1 w-full rounded-xl border border-hubspot-border bg-white p-3 shadow-[0_12px_32px_rgba(11,29,42,0.16)] sm:w-[19rem]">
           <div className="flex items-center justify-between">
             <button
@@ -213,36 +320,6 @@ export default function DatePicker({ id, value, onChange, placeholder = 'Select 
                 </button>
               );
             })}
-          </div>
-
-          <div className="mt-3 flex items-center justify-between border-t border-hubspot-border pt-2">
-            <div className="flex items-center gap-1">
-              <button
-                type="button"
-                onClick={() => selectOffsetDate(0)}
-                className="rounded-md px-2 py-1 text-xs font-medium text-hubspot-teal transition hover:bg-[#ECFDF9]"
-              >
-                Today
-              </button>
-              <button
-                type="button"
-                onClick={() => selectOffsetDate(1)}
-                className="rounded-md px-2 py-1 text-xs font-medium text-hubspot-teal transition hover:bg-[#ECFDF9]"
-              >
-                Tomorrow
-              </button>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => {
-                onChange('');
-                setIsOpen(false);
-              }}
-              className="rounded-md px-2 py-1 text-xs font-medium text-[#5B708B] transition hover:bg-[#F5F8FA]"
-            >
-              Clear
-            </button>
           </div>
         </div>
       ) : null}
